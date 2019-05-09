@@ -225,6 +225,18 @@ describe('<AutoComplete />', () => {
     expect(mockOnChange).toHaveBeenCalledWith('cricket');
   });
 
+  it('should handle an enter key press when no matches are being shown', () => {
+    const mockPreventDefault = jest.fn(() => null);
+    instance.setState({ currentInput: 'nothing matches this', selectedIndex: undefined, showResults: true });
+    instance.onKeyDown({ key: 'Enter', preventDefault: mockPreventDefault });
+
+    expect(wrapper.state().currentInput).toBe('nothing matches this');
+    expect(wrapper.state().selectedIndex).toBe(undefined);
+    expect(wrapper.state().showResults).toBe(false);
+    expect(mockPreventDefault).not.toHaveBeenCalled();
+    expect(mockOnChange).not.toHaveBeenCalled();
+  });
+
   it('should handle an escape key press', () => {
     const mockPreventDefault = jest.fn(() => null);
     instance.setState({ selectedIndex: 2, showResults: true });
